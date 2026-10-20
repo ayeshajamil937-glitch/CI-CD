@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Task Manager</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        header {
+            background: #1e293b;
+            padding: 24px 8%;
+            border-bottom: 1px solid #334155;
+        }
+
+        header h1 { margin: 0; color: #38bdf8; }
+        header p { margin-bottom: 0; color: #94a3b8; }
+
+        main { max-width: 900px; margin: 40px auto; padding: 20px; }
+
+        .card {
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+        }
+
+        .status { color: #4ade80; font-weight: bold; }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .task:last-child { border-bottom: none; }
+
+        .badge {
+            color: #fbbf24;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px;
+        }
+
+        button {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover { background: #0369a1; }
+        #error { color: #f87171; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DevOps Task Manager</h1>
+        <p>A three-tier application powered by Docker</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Application Overview</h2>
+            <p>Frontend: <span class="status">Nginx</span></p>
+            <p>Backend: <span class="status">Python Flask API</span></p>
+            <p>Database: <span class="status">PostgreSQL</span></p>
+            <p>Architecture: Frontend → Backend → Database</p>
+        </section>
+
+        <section class="card">
+            <h2>Project Tasks</h2>
+            <p id="connection">Connecting to the backend...</p>
+            <div id="tasks"></div>
+            <p id="error"></p>
+            <button onclick="loadTasks()">Refresh Tasks</button>
+        </section>
+    </main>
+
+    <footer>
+        Dockerized 3-Tier Application | Built for DevOps Learning
+    </footer>
+
+    <script>
+        async function loadTasks() {
+            const connection = document.getElementById("connection");
+            const tasksContainer = document.getElementById("tasks");
+            const error = document.getElementById("error");
+
+            connection.textContent = "Loading tasks...";
+            tasksContainer.innerHTML = "";
+            error.textContent = "";
+
+            try {
+                const response = await fetch("/api/tasks");
+
+                if (!response.ok) {
+                    throw new Error("Backend returned HTTP " + response.status);
+                }
+
+                const tasks = await response.json();
+
+                connection.textContent = "Database connected successfully";
+
+                if (tasks.length === 0) {
+                    tasksContainer.textContent = "No tasks found.";
+                }
+
+                tasks.forEach(task => {
+                    const row = document.createElement("div");
+                    row.className = "task";
+
+                    const title = document.createElement("span");
+                    title.textContent = task.title;
+
+                    const status = document.createElement("span");
+                    status.className = "badge";
+                    status.textContent = task.completed ? "Completed" : "Pending";
+
+                    row.append(title, status);
+                    tasksContainer.appendChild(row);
+                });
+            } catch (err) {
+                connection.textContent = "Unable to load tasks";
+                error.textContent =
+                    "Check that the backend and database containers are running.";
+            }
+        }
+
+        loadTasks();
+    </script>
+</body>
+</html>
