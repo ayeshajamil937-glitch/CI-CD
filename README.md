@@ -1,325 +1,185 @@
-# 🐳 Dockerized Three-Tier Application
+# 🐳 Dockerized Three-Tier Application & CI/CD Pipeline
 
-A containerized web application built using **Docker, Nginx, Flask, PostgreSQL, and Docker Compose**. This project demonstrates a three-tier architecture with separate frontend, backend, and database services.
+## 👩‍💻 Project Overview
 
-## 🏗️ Architecture
+This project focuses on learning Docker containerization, three-tier application architecture, Git/GitHub version control, and CI/CD automation using GitHub Actions.
 
-```mermaid
-flowchart TD
-    A["User / Browser"]
-    B["Frontend: Nginx"]
-    C["Backend: Flask API"]
-    D[("Database: PostgreSQL")]
+The goal is to build, run, test, and eventually deploy a containerized application through an automated DevOps workflow.
 
-    A -->|"HTTP :32000"| B
-    B -->|"/api/"| C
-    C -->|"SQL Queries"| D
-```
+## 🎯 Project Objectives
+
+- Understand Docker images and containers.
+- Run an Nginx web server inside a Docker container.
+- Learn Docker port mapping and container management.
+- Manage source code using Git and GitHub.
+- Create a CI pipeline using GitHub Actions.
+- Automate Docker image builds and application testing.
+- Prepare for deployment on an Ubuntu server or AWS EC2.
 
 ## 🛠️ Technology Stack
 
-| Technology | Purpose |
-|---|---|
-| Docker | Containerization |
-| Docker Compose | Multi-container orchestration |
-| Nginx | Web server and reverse proxy |
-| HTML, CSS, JavaScript | Frontend interface |
-| Python | Backend programming |
-| Flask | REST API |
-| Gunicorn | Python application server |
-| PostgreSQL | Relational database |
-| Git & GitHub | Version control |
+- **Operating System:** Ubuntu Linux / Windows
+- **Containerization:** Docker
+- **Web Server:** Nginx
+- **Version Control:** Git
+- **Code Hosting:** GitHub
+- **CI/CD:** GitHub Actions
+- **Container Orchestration:** Docker Compose (project development)
+- **Future Cloud Deployment:** AWS EC2
 
-## ✨ Features
+## 🏗️ Application Architecture
 
-- Three-tier application architecture.
-- Separate frontend, backend, and database containers.
-- Nginx reverse proxy for API requests.
-- Flask REST API connected to PostgreSQL.
-- Docker Compose service orchestration.
-- Container health checks.
-- Persistent database storage using Docker volumes.
-- Environment-based database configuration.
-- Dedicated Docker bridge network.
+```text
+Developer
+   |
+   v
+Git Repository
+   |
+   v
+GitHub Repository
+   |
+   v
+GitHub Actions
+   |
+   v
+Build Docker Image
+   |
+   v
+Run Container & Test HTTP
+   |
+   v
+Successful CI Pipeline
+```
 
-## 📁 Project Structure
+## ✅ Completed Work
+
+### 1. Docker Container
+
+- Docker container created using the Nginx Alpine image.
+- Container name: `my-docker-app`
+- Host port: `3000`
+- Container port: `80`
+- Application URL: http://localhost:3000
+- Container status: Running (when verified locally).
+
+### 2. Docker Commands Practiced
+
+- `docker ps`
+- `docker images`
+- `docker pull`
+- `docker run`
+- `docker logs`
+- `docker exec`
+- `docker build`
+
+### 3. Git and GitHub
+
+- Created and managed a Git repository.
+- Practiced adding, committing, pulling, and pushing changes.
+- Worked on synchronizing local and remote branches.
+- Practiced resolving a README merge conflict.
+
+### 4. CI/CD Learning
+
+- Created a GitHub Actions workflow.
+- Automated Docker image building.
+- Added an HTTP health/smoke test for the web application.
+- Configured automatic workflow execution on pushes to the `main` branch.
+
+**Note:** CI pipeline success should be confirmed in the GitHub Actions tab.
+
+## 🚧 Work in Progress / Future Enhancements
+
+- [ ] Configure a complete frontend using Nginx.
+- [ ] Develop a backend API using Node.js or Flask.
+- [ ] Integrate a MySQL or PostgreSQL database.
+- [ ] Complete the three-tier application.
+- [ ] Publish Docker images to Docker Hub or GitHub Container Registry.
+- [ ] Configure automated deployment to an Ubuntu VM or AWS EC2.
+- [ ] Add HTTPS/SSL.
+- [ ] Implement application monitoring and logging.
+
+## 📂 Project Structure
 
 ```text
 docker-3-tier-app/
 ├── frontend/
-│   ├── Dockerfile
-│   ├── index.html
-│   └── nginx.conf
 ├── backend/
-│   ├── Dockerfile
-│   ├── app.py
-│   └── requirements.txt
 ├── database/
-│   └── init.sql
-├── docker-compose.yml
+├── .github/
+│   └── workflows/
+│       └── docker-ci.yml
 ├── .env.example
 ├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
 └── README.md
 ```
 
-## 🚀 Getting Started
+*The folder structure may vary depending on which components have been created and committed.*
 
-### Prerequisites
+## 🚀 Run the Application
 
-- Linux or another supported operating system
-- Docker Engine
-- Docker Compose
-- Git
-
-### 1. Clone the Repository
+Start the Docker Compose application:
 
 ```bash
-git clone https://github.com/talha-zahoor-isra/docker-3-tier-app.git
-cd docker-3-tier-app
+docker compose up -d
 ```
 
-### 2. Configure Environment Variables
-
-Create your local environment file:
+Check running containers:
 
 ```bash
-cp .env.example .env
+docker ps
 ```
 
-Open the file:
+View logs:
 
 ```bash
-nano .env
+docker compose logs
 ```
 
-Set a strong database password:
+Open the application in a browser:
 
-```dotenv
-DB_PASSWORD=your_strong_password
-```
+http://localhost:3000
 
-Save the file and restrict its permissions on Linux:
+## 🔄 CI/CD Workflow
 
-```bash
-chmod 600 .env
-```
+1. Developer modifies the application code.
+2. Changes are committed and pushed to GitHub.
+3. GitHub Actions starts automatically.
+4. The workflow builds the Docker image.
+5. The container starts in the CI environment.
+6. An HTTP request tests the application.
+7. The workflow reports success or failure.
 
-**Security:** Never upload your `.env` file or real credentials to GitHub.
-
-### 3. Build and Start the Application
-
-```bash
-docker compose up --build -d
-```
-
-### 4. Check Container Status
-
-```bash
-docker compose ps
-```
-
-### 5. Access the Application
-
-Open the frontend in your browser:
-
-**http://localhost:32000**
-
-Check the backend health endpoint:
-
-```bash
-curl http://localhost:5001/health
-```
-
-Retrieve tasks directly from the backend:
-
-```bash
-curl http://localhost:5001/api/tasks
-```
-
-Retrieve tasks through the Nginx reverse proxy:
-
-```bash
-curl http://localhost:32000/api/tasks
-```
-
-## 🔄 How the Application Works
-
-```mermaid
-sequenceDiagram
-    actor User
-    participant Nginx
-    participant Flask
-    participant PostgreSQL
-
-    User->>Nginx: Request dashboard
-    Nginx-->>User: Return frontend
-    User->>Nginx: GET /api/tasks
-    Nginx->>Flask: Forward API request
-    Flask->>PostgreSQL: Query tasks
-    PostgreSQL-->>Flask: Return task records
-    Flask-->>Nginx: JSON response
-    Nginx-->>User: Return JSON
-```
-
-### Request Flow
-
-1. The browser requests the frontend from Nginx.
-2. Nginx serves the HTML, CSS, and JavaScript.
-3. The frontend requests task data through `/api/tasks`.
-4. Nginx forwards the request to the Flask backend.
-5. Flask queries PostgreSQL.
-6. PostgreSQL returns the task records.
-7. Flask returns JSON through Nginx to the browser.
-
-## 🔌 API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/` | API status |
-| GET | `/health` | Backend health check |
-| GET | `/api/tasks` | Retrieve tasks from PostgreSQL |
-
-### Example API Response
-
-```json
-[
-  {
-    "completed": false,
-    "id": 1,
-    "title": "Learn Docker"
-  },
-  {
-    "completed": false,
-    "id": 2,
-    "title": "Build 3-Tier Application"
-  },
-  {
-    "completed": false,
-    "id": 3,
-    "title": "Deploy on Docker Hub"
-  }
-]
-```
-
-## 🌐 Docker Networking
-
-```mermaid
-flowchart LR
-    U["Browser"]
-    F["Frontend<br/>Nginx :80"]
-    B["Backend<br/>Flask :5000"]
-    D[("PostgreSQL :5432")]
-
-    U -->|"Host :32000"| F
-    U -. "Direct API testing: :5001" .-> B
-    F -->|"backend:5000"| B
-    B -->|"database:5432"| D
-```
-
-The services communicate over a dedicated Docker bridge network.
-
-| Service | Host Port | Container Port |
-|---|---:|---:|
-| Frontend | 32000 | 80 |
-| Backend | 5001 | 5000 |
-| PostgreSQL | 5433 | 5432 |
-
-PostgreSQL's host port is bound to `127.0.0.1`, limiting host-side access to the local machine.
-
-## 💾 Database Persistence
-
-PostgreSQL uses a named Docker volume to preserve database files independently of the container lifecycle.
-
-```mermaid
-flowchart TD
-    A["Flask Backend"]
-    B[("PostgreSQL Container")]
-    C[("postgres-data Volume")]
-    D["Container Restart"]
-
-    A -->|"SQL Queries"| B
-    B <--> C
-    D --> B
-    C -->|"Existing Data"| B
-```
-
-The database volume normally survives container restarts and recreation.
-
-**Warning:** The command `docker compose down -v` removes the Compose-managed database volume and its stored data. Use it only when you intentionally want to reset the database.
-
-## 🐳 Useful Docker Commands
-
-### View Running Services
-
-```bash
-docker compose ps
-```
-
-### View Application Logs
-
-```bash
-docker compose logs -f
-```
-
-### View Backend Logs
-
-```bash
-docker compose logs -f backend
-```
-
-### Restart Services
-
-```bash
-docker compose restart
-```
-
-### Rebuild and Start
-
-```bash
-docker compose up --build -d
-```
-
-### Stop the Application
-
-```bash
-docker compose down
-```
+**Current scope:** Automated build and test. Image publishing and deployment are planned enhancements.
 
 ## 🔐 Security Practices
 
-- Database credentials are stored in `.env`.
-- The `.env` file is excluded from Git.
-- `.env.example` provides a configuration template.
-- PostgreSQL's host port is bound to localhost.
-- Application services communicate over a dedicated Docker network.
+- Do not commit `.env` files containing credentials.
+- Do not upload private SSH keys (`.pem`) to GitHub.
+- Use `.gitignore` to exclude secrets and unnecessary files.
+- Store deployment credentials in GitHub Actions Secrets.
+- Use least-privilege permissions for cloud resources.
 
-For production deployments, consider HTTPS, secrets management, database backups, monitoring, vulnerability scanning, and restricting unnecessary public ports.
+## 📚 Learning Outcomes
 
-## 📸 Screenshots
+Through this project, I am developing practical skills in:
 
-Screenshots of the running application, Docker containers, and API responses will be added here later.
+- Docker containerization
+- Linux and Ubuntu administration
+- Git and GitHub
+- CI/CD automation
+- Nginx web server configuration
+- Application deployment fundamentals
+- DevOps workflow and troubleshooting
 
-## 🛣️ Future Improvements
+## 👩‍💻 Author
 
-- [ ] Publish frontend and backend images to Docker Hub.
-- [ ] Implement additional task-management API operations.
-- [ ] Add automated API tests.
-- [ ] Create a CI/CD pipeline using GitHub Actions.
-- [ ] Add container image vulnerability scanning.
-- [ ] Deploy the application on AWS.
-- [ ] Configure HTTPS and production monitoring.
-- [ ] Add application screenshots.
+**Ayesha Jamil**
 
-These are planned improvements, not features claimed to be already implemented.
-
-## 👨‍💻 Author
-
-**Talha Zahoor**
-
-GitHub: [@talha-zahoor-isra](https://github.com/talha-zahoor-isra)
-
-Project Repository: [docker-3-tier-app](https://github.com/talha-zahoor-isra/docker-3-tier-app)
+Emerging DevOps Engineer | AWS | Git & GitHub | Cloud Infrastructure
 
 ---
 
-⭐ Built as a hands-on project to practice Docker, Linux, networking, API integration, database connectivity, and DevOps fundamentals.
+This is a hands-on learning project created to build practical DevOps skills through containerization, version control, and CI/CD automation.
